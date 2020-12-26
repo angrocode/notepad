@@ -1,8 +1,4 @@
 
-
---====================================================
-
-
 CREATE OR REPLACE FUNCTION func.objects_systems_parsing(schema text) RETURNS VOID AS
 $$
 DECLARE
@@ -122,13 +118,4 @@ BEGIN
 
 END
 $$ LANGUAGE plpgsql;
-
-SELECT func.objects_systems_parsing('objects');
-
-
-DROP FUNCTION objects_systems_parsing;
-
-SELECT dblink_disconnect('d45ttgj655');
-
-
 
