@@ -133,13 +133,11 @@ def state_new(hwnd):
         raise Exception('Length of the array 1')
     if len(linepos) != (len(zlevel) or len(zitem) or len(zopen)):
         raise Exception('Length of the array 2')
-
-    print(linepos)
+        
 
     retdict = {}
     for pos, pix in enumerate(linepos):
         pass
-
 
 
 def get_img(hwnd, coord):
