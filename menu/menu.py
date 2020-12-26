@@ -20,7 +20,7 @@ def cycle():
     state(duhwnd)
 
 
-def state_new(hwnd):
+def state(hwnd):
 
     c_line = (0x142027,)
     c_arrow = (0xBB9F5B, 0xC0A765)
