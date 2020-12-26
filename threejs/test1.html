@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Test 1</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <script type="module" src="test1.js"></script>
+    <style type="text/css">
+        html, body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            background-color: #403d38;
+        }
+
+        #main {
+            margin: 15px;
+            height: 700px;
+            z-index: 0;
+            position: relative;
+            background-color: #006400; /* #006400 Космос: #414a4c */
+        }
+
+        #drawing {
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+            display: block;
+            overflow: hidden;
+            position: relative;
+            /*background-color: #6a33a2;*/
+        }
+
+        #map {
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 2;
+            display: block;
+            overflow: hidden;
+            position: absolute;
+            /*background-color: #96894b;*/
+        }
+
+        #layer{
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 3;
+            position: absolute;
+            /*background-color: #982b4e;*/
+            display: grid;
+            grid-template:
+            "c c i" auto
+            "c c i" auto
+            "c c t" 100px
+            / auto auto 200px;
+        }
+
+        #info {
+            grid-area: i;
+            z-index: 5;
+            display: block;
+            overflow: hidden;
+            border-color: #FFFFFF;
+            border-style: solid;
+            border-width: 1px;
+        }
+
+        #tools {
+            grid-area: t;
+            z-index: 5;
+            display: block;
+            overflow: hidden;
+            border-color: #FFFFFF;
+            border-style: solid;
+            border-width: 1px;
+        }
+
+        /*#info{*/
+        /*    top: 100px;*/
+        /*    left: 500px;*/
+        /*    height: 300px;*/
+        /*    width: 250px;*/
+        /*    z-index: 5;*/
+        /*    position: absolute;*/
+        /*    border-color: white;*/
+        /*    border-style: solid;*/
+        /*    border-width: 1px;*/
+        /*    background-color: #982b4e;*/
+        /*}*/
+
+    </style>
+</head>
+<body>
+
+<div id="main">
+
+    <canvas id="drawing"></canvas>
+    <div id="map"></div>
+    <div id="layer">
+        <div id="info"></div>
+        <div id="tools"></div>
+    </div>
+
+</div>
+
+</body>
+</html>
