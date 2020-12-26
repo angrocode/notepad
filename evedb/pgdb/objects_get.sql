@@ -217,14 +217,3 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
-SELECT func.objects_get('systems', false);
-
-SELECT func.objects_get('systems', false, true, true, 33);
-
-SELECT func.objects_get('systems');
-
-
-SELECT dblink_disconnect('dDj5hVf86');
-
-
-DROP FUNCTION func.objects_get();
