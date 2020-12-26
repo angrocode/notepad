@@ -17,11 +17,7 @@ win32gui.SendMessage(duhwnd, win32con.WM_LBUTTONUP, 0x0, win32api.MAKELONG(10, 1
 
 def cycle():
 
-    start_time = time.time()
-
     state(duhwnd)
-
-    # time.sleep(1)
 
 
 def state_new(hwnd):
@@ -91,7 +87,6 @@ def state_new(hwnd):
     # open menu
     zopen = list(); pnext = False; flagopen = False
     for height in hmenuitm:
-        # print('====')
         for l in rows[height[0]:height[1] + 1]:
             for c in c_arrow:
                 if c in l:
@@ -114,7 +109,6 @@ def state_new(hwnd):
     # scroll
     up = False; down = False
     scl = [row[-10:-11:-1][0] for row in rows]
-    # print(scl)
 
     if c_sp in scl:
 
