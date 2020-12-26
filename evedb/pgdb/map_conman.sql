@@ -99,26 +99,3 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
--- 064a83b8b3ba755f32bc8f1052e18a8f12d58d4d25f33183088d8588
-SELECT * FROM func.map_conman('regions', '');
-
-
-DROP FUNCTION func.map_conman;
-
-/*
-
-map=# SELECT func.objects_get('planets', false);
-INFO:  map_conman line 63 at assignment
-SQL statement "SELECT *                 FROM func.map_conman(point, set_etag, set_object)"
-PL/pgSQL function objects_get(text,boolean,boolean,boolean,integer) line 99 at SQL statement, 22P02 : invalid input syntax for type json
-INFO:  map_conman line 63 at assignment
-SQL statement "SELECT *                 FROM func.map_conman(point, set_etag, set_object)"
-PL/pgSQL function objects_get(text,boolean,boolean,boolean,integer) line 99 at SQL statement, 22P02 : invalid input syntax for type json
-INFO:  map_conman line 63 at assignment
-SQL statement "SELECT *                 FROM func.map_conman(point, set_etag, set_object)"
-PL/pgSQL function objects_get(text,boolean,boolean,boolean,integer) line 99 at SQL statement, 22P02 : invalid input syntax for type json
-INFO:  map_conman line 43 at assignment
-SQL statement "SELECT *                 FROM func.map_conman(point, set_etag, set_object)"
-PL/pgSQL function objects_get(text,boolean,boolean,boolean,integer) line 99 at SQL statement, XX000 : Operation timed out after 1000 milliseconds with 0 out of 0 bytes received
-
- */
