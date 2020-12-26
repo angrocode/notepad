@@ -46,8 +46,3 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
-
-SELECT func.objects_get_esi_id();
-
-
-DROP FUNCTION func.objects_get_esi_id;
