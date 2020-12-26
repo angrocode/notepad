@@ -18,8 +18,8 @@ DECLARE
     set_method varchar := 'GET';
     response func.http_response;
     set_headers text := '{"(Host, esi.evetech.net)", ' ||
-                        '"(User-Agent, EVE Center dev.local)", ' ||
-                        '"(From, center@angro.org)", ' ||
+                        '"(User-Agent, NAME dev.local)", ' ||
+                        '"(From, mail@email.mail)", ' ||
                         '"(Accept-Encoding, \"gzip, deflate\")", ' ||
                         '"(Accept, application/json)"}';
     field varchar; value varchar;
