@@ -14,12 +14,32 @@ win32gui.SendMessage(duhwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, win32
 time.sleep(.1)
 win32gui.SendMessage(duhwnd, win32con.WM_LBUTTONUP, 0x0, win32api.MAKELONG(10, 10))
 
+statedb = {l: list() for l in range(10)}
+scrolldb = dict()
 
 def cycle():
 
     state(duhwnd)
 
+    
+def close(hwnd, lvl):
 
+    while True:
+        state(hwnd)
+        if len([z[2] for z in statedb[lvl] if z[0]]) == 0: break
+        for i in range(len(statedb) - 1, -1, -1):
+            action = ([z[2] for z in statedb[i] if z[0]])
+            if len(action) > 0:
+                print(i)
+                for x, y in action:
+                    mouse(hwnd, (x, y), 'l')
+                    if i == 0: mouse(hwnd, (x - 10, y), 'l')
+                break
+            action.clear()
+
+        time.sleep(.15)
+        
+        
 def state(hwnd):
 
     c_line = (0x142027,)
@@ -129,15 +149,15 @@ def state(hwnd):
         scroll = {'scl': 0, 'view': field[3] - field[2]}
 
 
-    if len(zlevel) != len(zitem) or len(zitem) != len(zopen) or len(zlevel) != len(zopen):
-        raise Exception('Length of the array 1')
-    if len(linepos) != (len(zlevel) or len(zitem) or len(zopen)):
-        raise Exception('Length of the array 2')
-        
+    if len({len(linepos), len(zlevel), len(zitem), len(zopen)}) > 1: raise Exception('Length of the array')
 
-    retdict = {}
-    for pos, pix in enumerate(linepos):
-        pass
+    for k in statedb.keys():
+        statedb[k].clear()
+
+    for i, y in enumerate(linepos):
+        x = x_item if zitem[i] else field[0] + x_line[zlevel[i]] + 7
+        y = field[2] + (y - 12)
+        statedb[zlevel[i]].append((zopen[i], zitem[i], (x, y)))
 
 
 def get_img(hwnd, coord):
