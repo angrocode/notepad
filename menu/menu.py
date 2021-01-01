@@ -42,16 +42,17 @@ def close(hwnd, lvl):
         
 def state(hwnd):
 
-    c_line = (0x142027,)
-    c_arrow = (0xBB9F5B, 0xC0A765)
-    c_bg = (0x000000, 0x142027)
-    c_sud = 0xB6DFED
-    c_sp = 0x547A87
+    c_line = (0x142027, 0x1C343C)
+    c_arrow = (0xBB9F5B, 0xC0A765, 0xC2AC6A)
+    c_bg = (0x000000, 0x142027, 0x1C343C)
+    c_sud = (0xB6DFED, )
+    c_sp = (0x547A87, 0xB6DFED)
     x_item = 360
+    x_scroll = 408
     field = (243, 418, 120, 680)  # sx, ex, sy, ey
     x_line = (7, 11, 15, 19, 23, 27, 31, 35, 39, 43, 47)
 
-    rawimg = get_img(hwnd, field)
+    rawimg = screen(hwnd, field)
     w = field[1] - field[0]; h = field[3] - field[2]
     img = Image.frombytes('RGB', (w, h), rawimg[2], 'raw', 'BGRX')
     # img.show()
@@ -63,16 +64,15 @@ def state(hwnd):
     linepos = list(); add = False
     for rpos, row in enumerate(rows):
         row = row[:-25:-1]
-        for c in c_line:
-            if c in row:
-                add = True
-            elif add:
-                add = False
-                linepos.append(rpos - 1)
+        if len(set(c_line) & set(row)) > 0:
+            add = True
+        elif len(set(c_line) & set(row)) == 0 and add:
+            add = False
+            linepos.append(rpos - 1)
 
-    if linepos[0] < 15:
-        linepos.pop(0)
-        print('0 position not available')
+    if len(linepos) == 0:
+        print('no detect menu')
+        exit(1)
 
     # the nesting level of the menu
     zlevel = list()
@@ -83,73 +83,68 @@ def state(hwnd):
                 break
 
     templine = linepos.copy()
-    templine.insert(0, 0)
-    hmenuitm = tuple(zip(map(lambda p: p + 1 if p > 0 else p, templine), templine[1:]))
+    if linepos[0] > 15: templine.insert(0, 0)
+    gridmenu = tuple(zip(map(lambda p: p + 1 if p > 0 else p, templine), templine[1:]))
+    pixmenu = tuple([rawpx[a*w:b*w+1] for a, b in gridmenu])
 
-    # menu or item
-    zitem = list(); pnext = False; flagitem = False
-    for height in hmenuitm:
-        for l in rows[height[0]:height[1] + 1]:
-            for c in c_arrow:
-                if c in l:
-                    flagitem = False
-                    pnext = True
-                    break
-                else:
-                    flagitem = True
+    # item bool
+    zitem = list()
+    for m in pixmenu:
+        zitem.append(bool(not len(set(c_arrow) & set(m))))
 
-            if pnext:
-                pnext = False
-                break
-
-        zitem.append(flagitem)
-
-    # open menu
-    zopen = list(); pnext = False; flagopen = False
-    for height in hmenuitm:
-        for l in rows[height[0]:height[1] + 1]:
-            for c in c_arrow:
-                if c in l:
-                    i = l.index(c)
-                    vfr = len([p for p in l[i - 4:i + 5] if p in c_bg])
-                    if vfr == 7: flagopen = False
-                    if vfr == 5: flagopen = True
-                    if vfr != 7 and vfr != 5: raise Exception('Detect open')
-                    pnext = True
-                    break
-                else:
-                    flagopen = False
-
-            if pnext:
-                pnext = False
-                break
-
-        zopen.append(flagopen)
+    # open menu bool
+    zopen = list()
+    for m in pixmenu:
+        if len(set(c_arrow) & set(m)):
+            i = [p for p, k in enumerate(m) if k in c_arrow][0]
+            vfr = len([p for p in m[i - 4:i + 5] if p in c_bg])
+            if vfr == 7: zopen.append(False)
+            if vfr == 5: zopen.append(True)
+            if vfr != 7 and vfr != 5: raise Exception('Detect open')
+        else:
+            zopen.append(False)
 
     # scroll
-    up = False; down = False
+    up = False; down = False; spos = False
     scl = [row[-10:-11:-1][0] for row in rows]
 
-    if c_sp in scl:
+    if c_sp[0] in scl or c_sp[1] in scl:
 
         for i in range(0, len(scl)):
-            if scl[i] == c_sud: up = i; break
-            if scl[i] == c_sp: up = i; break
+            if scl[i] in c_sud: up = i; break
+            if scl[i] in c_sp: up = i; break
 
         for i in range(len(scl) - 1, 0, -1):
-            if scl[i] == c_sud: down = i; break
-            if scl[i] == c_sp: down = i; break
+            if scl[i] in c_sud: down = i; break
+            if scl[i] in c_sp: down = i; break
 
         if not up or not down: raise Exception('Scroll range')
 
-        scroll = {'scl': len([p for p in scl if p == c_sp]), 'view': down - up}
+        for i in range(0, len(scl)):
+            if scl[i] in c_sp and scl[i + 1] in c_sp and scl[i + 2] in c_sp: spos = i; break
+
+        zscroll = {
+            'scl': len([p for p in scl if p in c_sp]),
+            'vpos': (field[2] + up, field[2] + down),
+            'spos': (x_scroll, field[2] + spos),
+            'topl': linepos[0],
+            'bottoml': linepos[len(linepos) - 1]
+        }
 
     else:
 
-        scroll = {'scl': 0, 'view': field[3] - field[2]}
+        zscroll = {
+            'scl': 0,
+            'vpos': (field[2], field[3]),
+            'spos': (x_scroll, field[2]),
+            'topl': linepos[0],
+            'bottoml': linepos[len(linepos) - 1]
+        }
 
+    if len({len(linepos), len(zlevel), len(zopen), len(zitem)}) > 1: raise Exception('Length of the array')
 
-    if len({len(linepos), len(zlevel), len(zitem), len(zopen)}) > 1: raise Exception('Length of the array')
+    global statedb
+    global scrolldb
 
     for k in statedb.keys():
         statedb[k].clear()
@@ -158,6 +153,9 @@ def state(hwnd):
         x = x_item if zitem[i] else field[0] + x_line[zlevel[i]] + 7
         y = field[2] + (y - 12)
         statedb[zlevel[i]].append((zopen[i], zitem[i], (x, y)))
+
+    scrolldb.clear()
+    scrolldb = zscroll
 
 
 def get_img(hwnd, coord):
