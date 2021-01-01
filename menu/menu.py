@@ -66,7 +66,7 @@ def state(hwnd):
         row = row[:-25:-1]
         if len(set(c_line) & set(row)) > 0:
             add = True
-        elif len(set(c_line) & set(row)) == 0 and add:
+        elif add:
             add = False
             linepos.append(rpos - 1)
 
