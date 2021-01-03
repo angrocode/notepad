@@ -81,7 +81,7 @@ def state(hwnd):
     x_item = 360
     field = (243, 418, 120, 680)  # sx, ex, sy, ey
     x_line = (7, 11, 15, 19, 23, 27, 31, 35, 39, 43, 47)
-    # ! magic number str 80, str 125
+    # ! magic number str 110, str 154
 
     rawimg = screen(hwnd, field)
     w = field[1] - field[0]; h = field[3] - field[2]
