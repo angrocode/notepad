@@ -48,7 +48,7 @@ def close(hwnd, lvl):
 
 def scroll(hwnd, ud):
 
-    grid, scl = state(hwnd); print(scl)
+    grid, scl = state(hwnd)
     hview, hscl, upline, downline, pos = scl
     if not hscl: return
     x, y = pos
